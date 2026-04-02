@@ -1,1 +1,2065 @@
-# Dluxe-barber
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>D. LUXE MOBILE — Mastery in Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     CSS VARIABLES & RESET
+  ============================================ */
+  :root {
+    --charcoal: #121212;
+    --matte-black: #0a0a0a;
+    --surface: #1a1a1a;
+    --surface-2: #222222;
+    --gold: #C9A84C;
+    --gold-light: #E8C46A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --silver: #A8A8A8;
+    --white: #F0EFED;
+    --white-dim: rgba(240,239,237,0.6);
+    --white-faint: rgba(240,239,237,0.08);
+    --border: rgba(201,168,76,0.2);
+    --border-subtle: rgba(240,239,237,0.08);
+
+    --font-display: 'Anton', sans-serif;
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-body: 'Barlow', sans-serif;
+
+    --h1: clamp(3rem, 12vw, 8rem);
+    --h2: clamp(2rem, 6vw, 4rem);
+    --h3: clamp(1.2rem, 3vw, 1.6rem);
+    --body: clamp(0.9rem, 2.2vw, 1rem);
+    --small: clamp(0.75rem, 1.8vw, 0.85rem);
+
+    --nav-h: 64px;
+    --bottom-bar-h: 72px;
+    --radius: 4px;
+    --radius-lg: 12px;
+    --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--matte-black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { display: block; width: 100%; }
+  a { text-decoration: none; color: inherit; }
+  button { border: none; cursor: pointer; font-family: var(--font-body); }
+
+  /* ============================================
+     SCROLLBAR
+  ============================================ */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--matte-black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* ============================================
+     NOISE TEXTURE OVERLAY
+  ============================================ */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ============================================
+     NAVIGATION
+  ============================================ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-h);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 3rem);
+    background: rgba(10,10,10,0);
+    backdrop-filter: blur(0px);
+    border-bottom: 1px solid transparent;
+    transition: all var(--transition);
+  }
+
+  nav.scrolled {
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom-color: var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-logo span {
+    color: var(--gold);
+  }
+
+  .nav-logo .dot {
+    width: 5px;
+    height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    transition: color var(--transition);
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--matte-black);
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    transition: all var(--transition);
+  }
+
+  .nav-cta:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+  }
+
+  .nav-cta:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    padding: 8px;
+    min-width: 48px;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--white);
+    transition: all var(--transition);
+    transform-origin: center;
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  .hamburger.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    top: var(--nav-h);
+    background: rgba(10,10,10,0.98);
+    backdrop-filter: blur(30px);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 8vw, 3rem);
+    letter-spacing: 0.1em;
+    color: var(--white);
+    transition: color var(--transition);
+  }
+
+  .mobile-menu a:hover,
+  .mobile-menu a:active { color: var(--gold); }
+
+  .mobile-menu .menu-book {
+    margin-top: 1rem;
+    background: var(--gold);
+    color: var(--matte-black);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 18px 48px;
+    border-radius: var(--radius);
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ============================================
+     HERO
+  ============================================ */
+  #hero {
+    position: relative;
+    height: 100svh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-video-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.5) 50%, rgba(10,10,10,0.9) 100%),
+      linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  }
+
+  /* Animated barber pole lines */
+  .hero-video-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 60px,
+      rgba(201,168,76,0.03) 60px,
+      rgba(201,168,76,0.03) 61px
+    );
+    animation: stripe-move 20s linear infinite;
+  }
+
+  @keyframes stripe-move {
+    from { background-position: 0 0; }
+    to { background-position: 120px 120px; }
+  }
+
+  /* Radial glow */
+  .hero-video-bg::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-size: var(--small);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-up 0.8s forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: var(--h1);
+    letter-spacing: 0.04em;
+    text-align: center;
+    line-height: 0.95;
+    max-width: 900px;
+    padding: 0 1.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fade-up 0.9s forwards 0.5s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title .gold-word { color: var(--gold); }
+
+  .hero-subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: var(--white-dim);
+    text-align: center;
+    margin-top: 1.5rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-up 0.8s forwards 0.8s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-up 0.8s forwards 1.1s;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--matte-black);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 18px 40px;
+    border-radius: var(--radius);
+    min-height: 56px;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 4px 16px rgba(201,168,76,0.2);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    font-weight: 400;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 18px 40px;
+    border-radius: var(--radius);
+    min-height: 56px;
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    transition: all var(--transition);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: calc(var(--bottom-bar-h) + 1.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fade-up 0.8s forwards 1.5s;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  .scroll-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    writing-mode: vertical-lr;
+  }
+
+  @keyframes fade-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================
+     SECTION COMMONS
+  ============================================ */
+  section {
+    padding: clamp(5rem, 12vw, 9rem) clamp(1.5rem, 5vw, 3rem);
+    position: relative;
+  }
+
+  .section-eyebrow {
+    font-size: var(--small);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: var(--h2);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 2rem;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============================================
+     STATS BAR
+  ============================================ */
+  .stats-bar {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem clamp(1.5rem, 5vw, 3rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .stat-item {
+    background: var(--surface);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    color: var(--gold);
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: var(--small);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+  }
+
+  /* ============================================
+     ABOUT / PROFILE
+  ============================================ */
+  #about {
+    background: var(--charcoal);
+    overflow: hidden;
+  }
+
+  .about-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 8vw, 6rem);
+    align-items: center;
+  }
+
+  .about-portrait-wrap {
+    position: relative;
+  }
+
+  .portrait-frame {
+    position: relative;
+    aspect-ratio: 3/4;
+    max-width: 420px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .portrait-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: linear-gradient(160deg, var(--surface-2) 0%, var(--surface) 100%);
+  }
+
+  .portrait-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .portrait-caption {
+    font-size: var(--small);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+  }
+
+  .portrait-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.6) 0%, transparent 50%);
+  }
+
+  .portrait-badge {
+    position: absolute;
+    bottom: -1rem;
+    right: -1rem;
+    background: var(--gold);
+    color: var(--matte-black);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    line-height: 1.2;
+    z-index: 2;
+    box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+  }
+
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .about-quote {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.5;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--gold);
+  }
+
+  .about-body {
+    font-size: var(--body);
+    color: var(--white-dim);
+    line-height: 1.9;
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .tag {
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 100px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ============================================
+     SERVICES / MENU
+  ============================================ */
+  #services {
+    background: var(--matte-black);
+  }
+
+  .services-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .services-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .service-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--surface);
+    padding: clamp(2rem, 5vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background var(--transition);
+    cursor: default;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover { background: var(--surface-2); }
+
+  .service-card.featured {
+    background: linear-gradient(160deg, #1d1a0f 0%, #151208 100%);
+  }
+
+  .service-card.featured::before { opacity: 1; }
+
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.6;
+  }
+
+  .service-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .service-desc {
+    font-size: var(--small);
+    color: var(--white-dim);
+    line-height: 1.8;
+    flex: 1;
+  }
+
+  .service-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .service-price {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .service-duration {
+    font-size: var(--small);
+    color: var(--white-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: var(--gold);
+    color: var(--matte-black);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+
+  .disclaimer {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--white-faint);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    font-size: var(--small);
+    color: var(--white-dim);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.7;
+  }
+
+  .disclaimer-icon { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+
+  /* ============================================
+     GALLERY / THE VAULT
+  ============================================ */
+  #gallery {
+    background: var(--charcoal);
+  }
+
+  .gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Before/After Slider */
+  .slider-section {
+    margin-bottom: 4rem;
+  }
+
+  .ba-slider {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    aspect-ratio: 16/10;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: col-resize;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .ba-before, .ba-after {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .ba-before {
+    background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+    z-index: 1;
+    clip-path: inset(0 50% 0 0);
+    transition: clip-path 0ms;
+  }
+
+  .ba-after {
+    background: linear-gradient(135deg, #201b0a 0%, #141008 100%);
+  }
+
+  .ba-label {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    z-index: 5;
+  }
+
+  .ba-before .ba-label {
+    left: 1rem;
+    background: rgba(0,0,0,0.7);
+    color: var(--white-dim);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .ba-after .ba-label {
+    right: 1rem;
+    background: var(--gold);
+    color: var(--matte-black);
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    background: var(--gold);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .ba-handle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ba-handle::after {
+    content: '◄ ►';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--matte-black);
+    font-size: 12px;
+    z-index: 11;
+    white-space: nowrap;
+  }
+
+  .ba-placeholder-icon {
+    font-size: 3rem;
+    opacity: 0.3;
+  }
+
+  .ba-placeholder-text {
+    font-size: var(--small);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    opacity: 0.5;
+  }
+
+  /* Masonry Grid */
+  .gallery-grid {
+    columns: 3 200px;
+    column-gap: 1rem;
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .gallery-item-inner {
+    width: 100%;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: transform var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gallery-item:hover .gallery-item-inner {
+    transform: scale(1.02);
+  }
+
+  .gallery-item-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(201,168,76,0.1) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .gallery-item:hover .gallery-item-inner::after { opacity: 1; }
+
+  .g1 { height: 280px; }
+  .g2 { height: 200px; }
+  .g3 { height: 240px; }
+  .g4 { height: 320px; }
+  .g5 { height: 200px; }
+  .g6 { height: 260px; }
+
+  .gallery-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--surface-2);
+    object-fit: cover;
+  }
+
+  .gallery-placeholder .g-icon { font-size: 2rem; opacity: 0.2; }
+  .gallery-placeholder .g-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    opacity: 0.4;
+  }
+
+  /* ============================================
+     BOOKING
+  ============================================ */
+  #booking {
+    background: var(--matte-black);
+  }
+
+  .booking-container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .booking-subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--white-dim);
+    margin-bottom: 3.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .booking-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .booking-tile {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: clamp(2rem, 5vw, 3rem) 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    min-height: 200px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .booking-tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-dim), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .booking-tile:hover::before { opacity: 1; }
+
+  .booking-tile:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(201,168,76,0.12);
+  }
+
+  .booking-tile:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .tile-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all var(--transition);
+    background: var(--matte-black);
+  }
+
+  .booking-tile:hover .tile-icon {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+    transform: scale(1.1);
+  }
+
+  .tile-title {
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .tile-desc {
+    font-size: var(--small);
+    color: var(--white-dim);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .tile-cta {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    font-weight: 500;
+  }
+
+  .tile-cta::after {
+    content: '→';
+    transition: transform var(--transition);
+  }
+
+  .booking-tile:hover .tile-cta::after {
+    transform: translateX(4px);
+  }
+
+  /* ============================================
+     TESTIMONIALS
+  ============================================ */
+  #testimonials {
+    background: var(--charcoal);
+    padding-block: clamp(4rem, 10vw, 7rem);
+  }
+
+  .testi-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+  }
+
+  .testi-track::-webkit-scrollbar { display: none; }
+
+  .testi-card {
+    flex: 0 0 clamp(280px, 80vw, 380px);
+    scroll-snap-align: start;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .testi-stars {
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+  }
+
+  .testi-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--white);
+    line-height: 1.7;
+  }
+
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: auto;
+  }
+
+  .testi-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .testi-name {
+    font-size: var(--small);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .testi-role {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+  }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  footer {
+    background: var(--matte-black);
+    border-top: 1px solid var(--border);
+    padding: clamp(3rem, 8vw, 5rem) clamp(1.5rem, 5vw, 3rem);
+    padding-bottom: calc(var(--bottom-bar-h) + 2rem);
+  }
+
+  .footer-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .footer-logo span { color: var(--gold); }
+
+  .footer-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--white-dim);
+    line-height: 1.7;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .social-link {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--white-dim);
+    transition: all var(--transition);
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  .social-link:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+    transform: translateY(-2px);
+  }
+
+  .social-link:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  .footer-col h4 {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .footer-col li a,
+  .footer-col li {
+    font-size: var(--small);
+    color: var(--white-dim);
+    transition: color var(--transition);
+    line-height: 1.5;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-col li a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--white-dim);
+    opacity: 0.5;
+  }
+
+  .footer-city {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ============================================
+     STICKY BOOK NOW (BOTTOM BAR)
+  ============================================ */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-bar-h);
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    z-index: 900;
+  }
+
+  .bottom-bar-book {
+    flex: 1;
+    max-width: 400px;
+    background: var(--gold);
+    color: var(--matte-black);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 16px;
+    border-radius: var(--radius);
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all var(--transition);
+  }
+
+  .bottom-bar-book:hover {
+    background: var(--gold-light);
+  }
+
+  .bottom-bar-book:active {
+    transform: scale(0.98);
+    background: var(--gold);
+  }
+
+  /* ============================================
+     GOLD DIVIDER
+  ============================================ */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+    opacity: 0.3;
+    margin: 0;
+  }
+
+  /* ============================================
+     RESPONSIVE — TABLET
+  ============================================ */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait-frame {
+      aspect-ratio: 4/3;
+    }
+
+    .service-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-tiles {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-brand {
+      grid-column: 1/-1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    :root {
+      --nav-h: 60px;
+    }
+
+    .stats-bar {
+      grid-template-columns: 1fr;
+      gap: 1px;
+    }
+
+    .gallery-grid {
+      columns: 2;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .booking-tiles {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-tile {
+      flex-direction: row;
+      text-align: left;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      min-height: 80px;
+    }
+
+    .booking-tile .tile-icon {
+      flex-shrink: 0;
+    }
+
+    .booking-tile .tile-desc {
+      text-align: left;
+    }
+  }
+
+  /* ============================================
+     GOLD SHINE ANIMATION
+  ============================================ */
+  @keyframes gold-shine {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .shine-text {
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 40%, #fff 50%, var(--gold-light) 60%, var(--gold) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gold-shine 4s linear infinite;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAVIGATION
+============================================ -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <span>D.</span>LUXE<div class="dot"></div>MOBILE
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">The Barber</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#testimonials">Clients</a></li>
+  </ul>
+  <a href="#booking" class="nav-cta">Secure Your Slot</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" class="menu-link">The Barber</a>
+  <a href="#services" class="menu-link">Services</a>
+  <a href="#gallery" class="menu-link">Gallery</a>
+  <a href="#testimonials" class="menu-link">Clients</a>
+  <a href="#booking" class="menu-book">Secure Your Slot</a>
+</div>
+
+<!-- ============================================
+     HERO
+============================================ -->
+<section id="hero">
+  <div class="hero-video-bg"></div>
+
+  <p class="hero-label">Premium Mobile Barbering</p>
+
+  <h1 class="hero-title">
+    <span class="shine-text">Mastery</span><br>
+    IN MOTION.<br>
+    <span class="gold-word">PRECISION</span><br>
+    AT YOUR DOOR.
+  </h1>
+
+  <p class="hero-subtitle">The Executive Suite on Wheels.</p>
+
+  <div class="hero-actions">
+    <a href="#booking" class="btn-primary">
+      ✦ Secure Your Slot
+    </a>
+    <a href="#services" class="btn-ghost">
+      View Services
+    </a>
+  </div>
+
+  <div class="hero-scroll-cue">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- ============================================
+     STATS BAR
+============================================ -->
+<div class="stats-bar">
+  <div class="stat-item reveal">
+    <span class="stat-number">500+</span>
+    <span class="stat-label">Happy Clients</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:0.1s">
+    <span class="stat-number">5★</span>
+    <span class="stat-label">Average Rating</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:0.2s">
+    <span class="stat-number">3+</span>
+    <span class="stat-label">Years Mobile</span>
+  </div>
+</div>
+
+<!-- ============================================
+     ABOUT — THE "D" PROFILE
+============================================ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-portrait-wrap reveal">
+      <div class="portrait-frame">
+        <div class="portrait-placeholder">
+          <div class="portrait-icon">✂</div>
+          <p class="portrait-caption">Professional Photo</p>
+        </div>
+      </div>
+      <div class="portrait-badge">
+        EST.<br>2021
+      </div>
+    </div>
+
+    <div class="about-content reveal" style="transition-delay:0.15s">
+      <div class="section-eyebrow">The Barber</div>
+      <h2 class="section-title">CRAFTED BY<br><span style="color:var(--gold)">DARIUS.</span></h2>
+      <blockquote class="about-quote">
+        "A sharp fade isn't just a haircut — it's a statement."
+      </blockquote>
+      <p class="about-body">
+        D. Luxe isn't just a haircut; it's a curated grooming experience brought to your doorstep. Founded by D, we prioritize craft, convenience, and the sharpest finish in the city. While others make you wait, we come to you — on your schedule, at your address, with the same precision and care as the finest barbershop in town.
+      </p>
+      <p class="about-body">
+        With years of dedicated mastery behind the chair — and now behind the wheel — D brings a white-glove grooming philosophy to every appointment.
+      </p>
+      <div class="about-tags">
+        <span class="tag">Mobile Service</span>
+        <span class="tag">Precision Fades</span>
+        <span class="tag">Beard Sculpting</span>
+        <span class="tag">Hot Towel Finish</span>
+        <span class="tag">By Appointment</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ============================================
+     SERVICES — THE MENU
+============================================ -->
+<section id="services">
+  <div class="services-container">
+    <div class="services-header">
+      <div>
+        <div class="section-eyebrow reveal">The Menu</div>
+        <h2 class="section-title reveal" style="transition-delay:0.1s">SELECT YOUR<br><span style="color:var(--gold)">EXPERIENCE.</span></h2>
+      </div>
+      <p class="reveal" style="max-width:260px; color:var(--white-dim); font-size:var(--small); line-height:1.8; text-align:right; transition-delay:0.2s">
+        Every service includes a consultation, precision line-up, and finishing product application.
+      </p>
+    </div>
+
+    <div class="service-cards reveal" style="transition-delay:0.15s">
+      <!-- Service 1 -->
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-name">THE SIGNATURE FADE</div>
+        <p class="service-desc">
+          Our flagship cut. A flawlessly blended skin-to-length fade tailored to your face structure and personal style. Includes precision line-up and finish.
+        </p>
+        <div class="service-footer">
+          <div class="service-price">$60</div>
+          <div class="service-duration">45–60 min</div>
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-name">BEARD SCULPTURE</div>
+        <p class="service-desc">
+          Shape, define, and sculpt. From a crisp business beard to a full grown mane — D crafts the silhouette that commands the room.
+        </p>
+        <div class="service-footer">
+          <div class="service-price">$40</div>
+          <div class="service-duration">30–40 min</div>
+        </div>
+      </div>
+
+      <!-- Service 3 — Featured -->
+      <div class="service-card featured">
+        <span class="featured-badge">Most Popular</span>
+        <div class="service-num">03</div>
+        <div class="service-name">THE FULL EXECUTIVE</div>
+        <p class="service-desc">
+          The complete treatment. Signature fade + beard sculpture + hot towel finish. The experience reserved for those who refuse to settle for anything less than elite.
+        </p>
+        <div class="service-footer">
+          <div class="service-price">$90</div>
+          <div class="service-duration">75–90 min</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer reveal" style="transition-delay:0.2s">
+      <span class="disclaimer-icon">◆</span>
+      <p>
+        <strong style="color:var(--white)">Mobile Convenience Fee:</strong> All services include a complimentary mobile convenience premium — no extra charges, no surprises. Travel within our standard service radius is included. Extended zones may incur an additional $10–$15 travel fee, confirmed at booking.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     GALLERY — THE VAULT
+============================================ -->
+<section id="gallery">
+  <div class="gallery-container">
+    <div class="section-eyebrow reveal">The Vault</div>
+    <h2 class="section-title reveal" style="transition-delay:0.1s">RESULTS THAT<br><span style="color:var(--gold)">SPEAK.</span></h2>
+
+    <!-- Before / After Slider -->
+    <div class="slider-section reveal" style="transition-delay:0.15s">
+      <p style="font-size:var(--small); color:var(--white-dim); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1.5rem; text-align:center">
+        ← Drag to Compare →
+      </p>
+      <div class="ba-slider" id="baSlider">
+        <div class="ba-after">
+          <div class="ba-placeholder-icon">✦</div>
+          <div class="ba-placeholder-text">After — The Finish</div>
+          <div class="ba-label">After</div>
+        </div>
+        <div class="ba-before" id="baBefore">
+          <div class="ba-placeholder-icon">✂</div>
+          <div class="ba-placeholder-text">Before — Raw Canvas</div>
+          <div class="ba-label">Before</div>
+        </div>
+        <div class="ba-handle" id="baHandle"></div>
+      </div>
+    </div>
+
+    <!-- Masonry Grid -->
+    <div class="gallery-grid" style="margin-top:3rem">
+      <div class="gallery-item reveal">
+        <div class="gallery-item-inner g1">
+          <div class="gallery-placeholder">
+            <span class="g-icon">✂</span>
+            <span class="g-label">Fresh Fade</span>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.05s">
+        <div class="gallery-item-inner g2">
+          <div class="gallery-placeholder">
+            <span class="g-icon">◆</span>
+            <span class="g-label">Beard Sculpt</span>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.1s">
+        <div class="gallery-item-inner g3">
+          <div class="gallery-placeholder">
+            <span class="g-icon">✦</span>
+            <span class="g-label">Executive Look</span>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.05s">
+        <div class="gallery-item-inner g4">
+          <div class="gallery-placeholder">
+            <span class="g-icon">✂</span>
+            <span class="g-label">Skin Fade</span>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.1s">
+        <div class="gallery-item-inner g5">
+          <div class="gallery-placeholder">
+            <span class="g-icon">◆</span>
+            <span class="g-label">Line-up</span>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item reveal" style="transition-delay:0.15s">
+        <div class="gallery-item-inner g6">
+          <div class="gallery-placeholder">
+            <span class="g-icon">✦</span>
+            <span class="g-label">Hot Towel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     BOOKING — CHOOSE YOUR PATH
+============================================ -->
+<section id="booking">
+  <div class="booking-container">
+    <div class="section-eyebrow reveal" style="justify-content:center">Booking</div>
+    <h2 class="section-title reveal" style="transition-delay:0.1s; text-align:center">CHOOSE YOUR<br><span style="color:var(--gold)">PATH.</span></h2>
+    <p class="booking-subtitle reveal" style="transition-delay:0.15s">
+      Multiple ways to get on D's schedule — pick what's easiest for you.
+    </p>
+
+    <div class="booking-tiles">
+      <a href="sms:+1234567890" class="booking-tile reveal" style="transition-delay:0.1s">
+        <div class="tile-icon">💬</div>
+        <div class="tile-title">TEXT FOR AVAILABILITY</div>
+        <p class="tile-desc">Fast, direct, personal. Text D directly and get a response within the hour.</p>
+        <div class="tile-cta">Text Now</div>
+      </a>
+
+      <a href="https://instagram.com" target="_blank" rel="noopener" class="booking-tile reveal" style="transition-delay:0.2s">
+        <div class="tile-icon">📸</div>
+        <div class="tile-title">DM ON INSTAGRAM</div>
+        <p class="tile-desc">Slide into the DMs. See fresh work, then book your spot from the same app.</p>
+        <div class="tile-cta">Open IG</div>
+      </a>
+
+      <a href="#" class="booking-tile reveal" style="transition-delay:0.3s">
+        <div class="tile-icon">📲</div>
+        <div class="tile-title">BOOK VIA APP</div>
+        <p class="tile-desc">Choose your time, confirm your address, and you're locked in. Zero friction.</p>
+        <div class="tile-cta">Book Online</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TESTIMONIALS
+============================================ -->
+<section id="testimonials">
+  <div class="section-eyebrow reveal">Client Voices</div>
+  <h2 class="section-title reveal" style="transition-delay:0.1s; margin-bottom:3rem">WHAT THEY<br><span style="color:var(--gold)">SAY.</span></h2>
+
+  <div class="testi-track">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"D showed up on time, set up like a pro, and gave me the cleanest fade I've had in years. Never going back to a regular shop."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👤</div>
+        <div>
+          <div class="testi-name">Marcus J.</div>
+          <div class="testi-role">Regular Client</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Booked via text, he was at my door in under 24 hours. The Full Executive is worth every dollar — I walked into my meeting looking immaculate."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👤</div>
+        <div>
+          <div class="testi-name">Andre T.</div>
+          <div class="testi-role">Executive Client</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"The convenience alone is a 10. But then when you see the final result — blade-sharp edges, perfect blend — it's genuinely on another level."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👤</div>
+        <div>
+          <div class="testi-name">Jordan K.</div>
+          <div class="testi-role">Monthly Client</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"My whole squad uses D now. He came to my place for a pre-event cut and the whole vibe was just different — professional, fast, elite."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👤</div>
+        <div>
+          <div class="testi-name">Demarco W.</div>
+          <div class="testi-role">Event Client</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+============================================ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo"><span>D.</span>LUXE MOBILE</div>
+      <p class="footer-tagline">
+        Mastery in Motion. Precision at Your Door.<br>
+        The executive suite on wheels.
+      </p>
+      <div class="social-links">
+        <a href="#" class="social-link" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="TikTok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.67a8.18 8.18 0 004.79 1.52V6.73a4.85 4.85 0 01-1.02-.04z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Twitter/X">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#about">The Barber</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#testimonials">Clients</a></li>
+        <li><a href="#booking">Book Now</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="sms:+1234567890">Text: (123) 456-7890</a></li>
+        <li><a href="https://instagram.com" target="_blank">@DLuxeMobile</a></li>
+        <li>
+          <span class="footer-city">📍 Serving [Your City] &amp; Surrounding Areas</span>
+        </li>
+        <li style="color:var(--white-dim); font-size:0.7rem; margin-top:0.5rem;">
+          By Appointment Only
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 D. Luxe Mobile. All rights reserved.</p>
+    <p class="footer-copy">Crafted with precision.</p>
+  </div>
+</footer>
+
+<!-- ============================================
+     STICKY BOTTOM BAR
+============================================ -->
+<div class="bottom-bar">
+  <a href="#booking" class="bottom-bar-book">
+    ✦ Book Your Cut Now
+  </a>
+</div>
+
+<!-- ============================================
+     JAVASCRIPT
+============================================ -->
+<script>
+  // ── NAVBAR SCROLL ──────────────────────────
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  // ── HAMBURGER MENU ─────────────────────────
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  });
+
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // ── SCROLL REVEAL ──────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ── BEFORE/AFTER SLIDER ────────────────────
+  const slider = document.getElementById('baSlider');
+  const before = document.getElementById('baBefore');
+  const handle = document.getElementById('baHandle');
+  let isDragging = false;
+  let sliderPct = 50;
+
+  function setSlider(pct) {
+    pct = Math.max(2, Math.min(98, pct));
+    sliderPct = pct;
+    before.style.clipPath = `inset(0 ${100-pct}% 0 0)`;
+    handle.style.left = `${pct}%`;
+  }
+
+  function getPointerPct(e, el) {
+    const rect = el.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    return ((clientX - rect.left) / rect.width) * 100;
+  }
+
+  slider.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    setSlider(getPointerPct(e, slider));
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    setSlider(getPointerPct(e, slider));
+  });
+
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
+  // Touch support
+  slider.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    setSlider(getPointerPct(e, slider));
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    setSlider(getPointerPct(e, slider));
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => { isDragging = false; });
+
+  // Initialize
+  setSlider(50);
+
+  // ── SMOOTH ACTIVE STATES ───────────────────
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('touchstart', () => el.style.opacity = '0.85', { passive: true });
+    el.addEventListener('touchend', () => el.style.opacity = '');
+    el.addEventListener('touchcancel', () => el.style.opacity = '');
+  });
+</script>
+
+</body>
+</html>
+dluxe-mobile.html
+Displaying dluxe-mobile.html.
